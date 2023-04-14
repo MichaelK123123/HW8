@@ -78,8 +78,8 @@ def plot_rest_categories(db):
     c = conn.cursor()
 
     # Get the restaurant categories and counts from the database
-    c.execute("SELECT restaurants.name,restaurants.rating,buildings.building FROM restaurants JOIN buildings ON restaurants.building_id = buildings.id")
-
+    c.execute("SELECT restaurants.name,categories.category FROM restaurants JOIN buildings ON restaurants.category_id = categories.id")
+    rows = c.fetchall()
     # Create a dictionary with restaurant categories as keys and counts as values
     categories_dict = {}
     for category in rower:
