@@ -96,18 +96,11 @@ def plot_rest_categories(db):
     
     return result_dict
 
-    """
-    This function accepts a file name of a database as a parameter and returns a dictionary. The keys should be the
-    restaurant categories and the values should be the number of restaurants in each category. The function should
-    also create a bar chart with restaurant categories and the count of number of restaurants in each category.
-    """
-    pass
 
 def find_rest_in_building(building_num, db):
 
     conn = sqlite3.connect(db)
     c = conn.cursor()
-
 
 
     c.execute("SELECT restaurants.name,restaurants.rating,buildings.building FROM restaurants JOIN buildings ON restaurants.building_id = buildings.id")
@@ -122,9 +115,15 @@ def find_rest_in_building(building_num, db):
     return lst
 
 
-
 #EXTRA CREDIT
 def get_highest_rating(db): #Do this through DB as well
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+
+
+    c.execute("SELECT restaurants.name,restaurants.rating,buildings.building FROM restaurants JOIN buildings ON restaurants.building_id = buildings.id")
+    rower = c.fetchall()
+    
     """
     This function return a list of two tuples. The first tuple contains the highest-rated restaurant category 
     and the average rating of the restaurants in that category, and the second tuple contains the building number 
