@@ -1,6 +1,6 @@
-# Your name: 
-# Your student id:
-# Your email:
+# Your name: Michael Keoleian
+# Your student id: 2044 4110
+# Your email: Keoleian@umich.edu
 # List who you have worked with on this homework:
 
 import matplotlib.pyplot as plt
@@ -9,15 +9,95 @@ import sqlite3
 import unittest
 
 def load_rest_data(db):
-    """
-    This function accepts the file name of a database as a parameter and returns a nested
-    dictionary. Each outer key of the dictionary is the name of each restaurant in the database, 
-    and each inner key is a dictionary, where the key:value pairs should be the category, 
-    building, and rating for the restaurant.
-    """
-    pass
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+
+    # select all data from the restaurants table
+    c.execute("SELECT * FROM restaurants")
+    rows = c.fetchall()
+
+    c.execute("SELECT * FROM buildings")
+    rower = c.fetchall()
+
+    dic = {}
+    for row in rower:
+        id = row[0]
+        num = row[1]
+        dic[id] = num
+
+
+    # create a nested dictionary to store restaurant data
+    rest_data = {}
+    for row in rows:
+        rest_name = row[1]
+        category = row[2]
+        building = row[3]
+        rating = row[4]
+
+        if category == 1:
+            category = 'Cafe'
+        elif category == 2:
+            category = 'Deli'
+        elif category == 3:
+            category = 'Bubble Tea Shop'
+        elif category == 4:
+            category = 'Sandwich Shop'
+        elif category == 5:
+            category = 'Cookie Shop'
+        elif category == 6:
+            category = 'Bar'
+        elif category == 7:
+            category = 'Pizzeria'
+        elif category == 8:
+            category = 'Mexican Restaurant'
+        elif category == 9:
+            category = 'Korean Restaurant'
+        elif category == 10:
+            category = 'Asian Cuisine'
+        elif category == 11:
+            category = 'Mediterranean Restaurant'
+        elif category == 12:
+            category = 'Thai Restaurant'
+        elif category == 13:
+            category = 'Japanses Restaurant'
+        elif category == 14:
+            category = 'Juice Shop'
+
+        building = dic.get(building)
+
+        # add restaurant data to dictionary
+        rest_data[rest_name] = {'category': category, 'building': building, 'rating': rating}
+
+    # close the database connection and return the restaurant data
+    conn.close()
+    return rest_data
 
 def plot_rest_categories(db):
+
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+
+    # Get the restaurant categories and counts from the database
+    c.execute("SELECT restaurants.name,restaurants.rating,buildings.building FROM restaurants JOIN buildings ON restaurants.building_id = buildings.id")
+
+    # Create a dictionary with restaurant categories as keys and counts as values
+    categories_dict = {}
+    for category in rower:
+        categories_dict[category[1]] = 0
+    
+
+    # Plot the bar chart
+    plt.bar(categories_dict.keys(), categories_dict.values())
+    plt.xlabel("Restaurant Categories")
+    plt.ylabel("Number of Restaurants")
+    plt.title("Number of Restaurants in Each Category")
+    plt.show()
+
+    # Close the database connection
+    conn.close()
+    
+    return categories_dict
+
     """
     This function accepts a file name of a database as a parameter and returns a dictionary. The keys should be the
     restaurant categories and the values should be the number of restaurants in each category. The function should
@@ -26,12 +106,24 @@ def plot_rest_categories(db):
     pass
 
 def find_rest_in_building(building_num, db):
-    '''
-    This function accepts the building number and the filename of the database as parameters and returns a list of 
-    restaurant names. You need to find all the restaurant names which are in the specific building. The restaurants 
-    should be sorted by their rating from highest to lowest.
-    '''
-    pass
+
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+
+
+
+    c.execute("SELECT restaurants.name,restaurants.rating,buildings.building FROM restaurants JOIN buildings ON restaurants.building_id = buildings.id")
+    rower = c.fetchall()
+
+    lst = []
+    s = sorted(rower, key = lambda x: x[1], reverse = True)
+    for x in s:
+        if building_num == x[2]:
+            lst.append(x[0])
+            
+    return lst
+
+
 
 #EXTRA CREDIT
 def get_highest_rating(db): #Do this through DB as well
@@ -49,6 +141,8 @@ def get_highest_rating(db): #Do this through DB as well
 
 #Try calling your functions here
 def main():
+    load_rest_data('South_U_Restaurants.db')
+    plot_rest_categories('South_U_Restaurants.db')
     pass
 
 class TestHW8(unittest.TestCase):
