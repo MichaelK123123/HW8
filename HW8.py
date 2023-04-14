@@ -140,6 +140,7 @@ def get_highest_rating(db): #Do this through DB as well
 def main():
     load_rest_data('South_U_Restaurants.db')
     plot_rest_categories('South_U_Restaurants.db')
+    find_rest_in_building(1101,'South_U_Restaurants.db' )
     pass
 
 class TestHW8(unittest.TestCase):
