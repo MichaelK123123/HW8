@@ -78,16 +78,14 @@ def plot_rest_categories(db):
     c = conn.cursor()
 
     # Get the restaurant categories and counts from the database
-    c.execute("SELECT restaurants.name,categories.category FROM restaurants JOIN buildings ON restaurants.category_id = categories.id")
+    c.execute("SELECT categories.category, COUNT(restaurants.id) FROM restaurants JOIN categories ON restaurants.category_id = categories.id GROUP BY categories.category")
     rows = c.fetchall()
-    # Create a dictionary with restaurant categories as keys and counts as values
-    categories_dict = {}
-    for category in rower:
-        categories_dict[category[1]] = 0
+    result_dict = {row[0]: row[1] for row in rows}
+    
     
 
     # Plot the bar chart
-    plt.bar(categories_dict.keys(), categories_dict.values())
+    plt.bar(result_dict.keys(), result_dict.values())
     plt.xlabel("Restaurant Categories")
     plt.ylabel("Number of Restaurants")
     plt.title("Number of Restaurants in Each Category")
@@ -96,7 +94,7 @@ def plot_rest_categories(db):
     # Close the database connection
     conn.close()
     
-    return categories_dict
+    return result_dict
 
     """
     This function accepts a file name of a database as a parameter and returns a dictionary. The keys should be the
